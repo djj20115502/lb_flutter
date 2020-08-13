@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:lblelinkplugin/tv_list.dart';
+import 'package:lb_flutter/tv_list.dart';
 
 class Lblelinkplugin {
   static const MethodChannel _channel = const MethodChannel('lblelinkplugin');

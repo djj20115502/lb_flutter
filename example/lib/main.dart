@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:lblelinkplugin/tv_list.dart';
+import 'package:lb_flutter/tv_list.dart';
 import 'package:flutter/services.dart';
-import 'package:lblelinkplugin/lblelinkplugin.dart';
+import 'package:lb_flutter/lblelinkplugin.dart';
 
 void main() => runApp(MyApp());
 

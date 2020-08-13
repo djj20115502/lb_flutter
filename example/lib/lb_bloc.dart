@@ -1,4 +1,4 @@
-import 'package:lblelinkplugin/lblelinkplugin.dart';
+import 'package:lb_flutter/lblelinkplugin.dart';
 
 /**
  *
