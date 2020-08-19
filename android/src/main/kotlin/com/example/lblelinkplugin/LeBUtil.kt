@@ -228,8 +228,8 @@ class LeBUtil private constructor() {
         playerInfo.loopMode = LelinkPlayerInfo.LOOP_MODE_SINGLE
         playerInfo.type = LelinkSourceSDK.MEDIA_TYPE_VIDEO
         playerInfo.lelinkServiceInfo = selectLelinkServiceInfo
-        playerInfo.header="referer:kkkanju.com"
-         sdk.startPlayMedia(playerInfo)
+        playerInfo.header = "{\"referer\":\"app1.kkkanju.com\"}"
+        sdk.startPlayMedia(playerInfo)
     }
 
     fun initEvent(events: EventChannel.EventSink?) {
