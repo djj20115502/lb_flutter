@@ -164,7 +164,7 @@ class LeBUtil private constructor() {
     fun connectService(id: String, name: String) {
         deviceList.forEach {
             //循环数据
-            if (id == it.ip) {//确定连接项
+            if (id == it.ip && name == it.name) {//确定连接项
                 selectLelinkServiceInfo = it
             }
         }

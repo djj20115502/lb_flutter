@@ -99,13 +99,14 @@ class Lblelinkplugin {
   }
 
   //连接设备(参数未定)
-  static connectToService(String ipAddress,
+  static connectToService(String ipAddress,String name,
       {@required Function fConnectListener,
-      @required Function fDisConnectListener}) {
+        @required Function fDisConnectListener}) {
     _connectListener = fConnectListener;
     _disConnectListener = fDisConnectListener;
-    _channel.invokeMethod("connectToService", {"ipAddress": ipAddress});
+    _channel.invokeMethod("connectToService", {"ipAddress": ipAddress,"name":name});
   }
+
 
   //获取上次连接的设备
   static Future<TvData> getLastConnectService(){
