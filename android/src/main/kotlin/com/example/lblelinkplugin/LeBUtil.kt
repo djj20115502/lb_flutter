@@ -19,9 +19,9 @@ class LeBUtil private constructor() {
     val deviceList = mutableListOf<LelinkServiceInfo>()
     var selectLelinkServiceInfo: LelinkServiceInfo? = null
 
-    var lastLinkIp by SharedPreference("lastLinkIp","")
-    var lastLinkName by SharedPreference("lastLinkName","")
-    var lastLinkUid by SharedPreference("lastLinkUid","")
+    var lastLinkIp by SharedPreference("lastLinkIp", "")
+    var lastLinkName by SharedPreference("lastLinkName", "")
+    var lastLinkUid by SharedPreference("lastLinkUid", "")
 
     private fun initListener() {
         sdk.run {
@@ -48,7 +48,7 @@ class LeBUtil private constructor() {
                         p0!!.run {
                             lastLinkIp = ip
                             lastLinkName = name
-                            lastLinkUid = uid
+                            lastLinkUid = if (uid == null) "" else uid
                         }
                         Log.d("乐播云", "连接成功")
                         playListener()
