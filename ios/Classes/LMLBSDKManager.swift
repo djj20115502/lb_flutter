@@ -17,13 +17,13 @@ class LMLBSDKManager: NSObject {
     func initLBSDK(appid: String,secretKey: String,result: @escaping FlutterResult){
         
         #if DEBUG
-           LBLelinkKit.enableLog(true);
+        LBLelinkKit.enableLog(true);
         #else
         
         #endif
-
+        
         let authResult: Bool = ((try? LBLelinkKit.auth(withAppid: appid, secretKey: secretKey)) != nil)
-
+        
         if (authResult){
             print("sdk初始化成功")
         }else{
@@ -61,14 +61,14 @@ class LMLBSDKManager: NSObject {
         }
         
         if let c = currentService{
-
+            
             self.linkConnection.lelinkService = c
             self.linkConnection.connect();
-
+            
         }else{
-
+            
             print("设备无效/找不到该设备");
-
+            
         }
         
     }
@@ -78,26 +78,17 @@ class LMLBSDKManager: NSObject {
         
         let lastServices = self.linkBrowser.lastServices()
         
-        if lastServices?.count ?? 0 > 0{
-        
-            let ser = lastServices?[0]
+        if lastServices.count > 0 {
             
-            if let item = ser{
+            let item = lastServices[0]
             
-                let dict: [String:String] = [
-                    "tvName": item.lelinkServiceName,
-                    "tvUID": item.tvUID == nil ? "":item.tvUID,
-                    "ipAddress":item.ipAddress
-                ];
-               
-                result(dict);
-            }else{
-                result([
-                    "tvName": "",
-                    "tvUID": "",
-                    "ipAddress":""
-                ])
-            }
+            let dict: [String:String] = [
+                "tvName": item.lelinkServiceName,
+                "tvUID": item.tvUID == nil ? "":item.tvUID,
+                "ipAddress":item.ipAddress
+            ];
+            
+            result(dict);
         }else{
             result([
                 "tvName": "",
@@ -143,7 +134,7 @@ class LMLBSDKManager: NSObject {
 extension LMLBSDKManager: LBLelinkBrowserDelegate{
     
     //搜索列表发生错误回调
-    func lelinkBrowser(_ browser: LBLelinkBrowser!, onError error: Error!) {
+    func lelinkBrowser(_ browser: LBLelinkBrowser, onError error: Error) {
         
         print("搜索设备发生错误：\(String(describing: error))")
         
@@ -151,7 +142,7 @@ extension LMLBSDKManager: LBLelinkBrowserDelegate{
     }
     
     //设备列表发生变化回调
-    func lelinkBrowser(_ browser: LBLelinkBrowser!, didFind services: [LBLelinkService]!) {
+    func lelinkBrowser(_ browser: LBLelinkBrowser, didFind services: [LBLelinkService]) {
         
         self.services = services;
         
@@ -165,20 +156,20 @@ extension LMLBSDKManager: LBLelinkBrowserDelegate{
 extension LMLBSDKManager: LBLelinkConnectionDelegate{
     
     //连接成功
-   func lelinkConnection(_ connection: LBLelinkConnection, didConnectTo service: LBLelinkService) {
-       
-       print("连接成功");
-    
-    for item in self.linkBrowser.lastServices() {
-        self.linkBrowser.deleteLelinkService(item)
+    func lelinkConnection(_ connection: LBLelinkConnection, didConnectTo service: LBLelinkService) {
+        
+        print("连接成功");
+        
+        for item in self.linkBrowser.lastServices() {
+            self.linkBrowser.deleteLelinkService(item)
+        }
+        //连接成功的话保存该设备
+        self.linkBrowser.save([service])
+        
+        LMLBEventChannelSupport.sharedInstance.sendCommonDesToFlutter(type: .connect, des: "连接\(String(describing: service.lelinkServiceName))成功")
+        
     }
-    //连接成功的话保存该设备
-    self.linkBrowser.save([service])
     
-    LMLBEventChannelSupport.sharedInstance.sendCommonDesToFlutter(type: .connect, des: "连接\(String(describing: service.lelinkServiceName))成功")
-    
-   }
-
     //连接断开
     func lelinkConnection(_ connection: LBLelinkConnection, disConnectTo service: LBLelinkService) {
         print("连接断开");

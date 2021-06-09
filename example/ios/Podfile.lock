@@ -1,13 +1,13 @@
 PODS:
   - Flutter (1.0.0)
-  - LBLelinkKit (30226)
-  - lblelinkplugin (0.0.1):
+  - lb_flutter (0.0.1):
     - Flutter
     - LBLelinkKit
+  - LBLelinkKit (30706)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - lblelinkplugin (from `.symlinks/plugins/lblelinkplugin/ios`)
+  - lb_flutter (from `.symlinks/plugins/lb_flutter/ios`)
 
 SPEC REPOS:
   trunk:
@@ -16,14 +16,14 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-  lblelinkplugin:
-    :path: ".symlinks/plugins/lblelinkplugin/ios"
+  lb_flutter:
+    :path: ".symlinks/plugins/lb_flutter/ios"
 
 SPEC CHECKSUMS:
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  LBLelinkKit: daa208412189a07f69228ae436da2d207f742b2a
-  lblelinkplugin: 61106b88e135e5f2b2d2757ea7635695e4ea8e3d
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  lb_flutter: 5a03312376506a772e1b2542be9731f57645c807
+  LBLelinkKit: 7fbaae07a4c26e6bb740c6d07e99a8886bc1dd62
 
-PODFILE CHECKSUM: 1b66dae606f75376c5f2135a8290850eeb09ae83
+PODFILE CHECKSUM: fc81e398f362bae88bdf55239bd5cf842faad39f
 
-COCOAPODS: 1.9.2
+COCOAPODS: 1.10.1
