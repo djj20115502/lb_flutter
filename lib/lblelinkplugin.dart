@@ -9,11 +9,11 @@ class Lblelinkplugin {
       const EventChannel("lblelink_event");
 
   //设备列表回调
-  static ValueChanged<List<TvData>> _serviecListener;
+  static ValueChanged<List<TvData>>? _serviecListener;
 
-  static Function _connectListener;
-  static Function _disConnectListener;
-  static LbCallBack _lbCallBack;
+  static Function? _connectListener;
+  static Function? _disConnectListener;
+  static LbCallBack? _lbCallBack;
 
   static set lbCallBack(LbCallBack value) {
     _lbCallBack = value;
@@ -26,7 +26,7 @@ class Lblelinkplugin {
 
       switch (type) {
         case -1:
-          _disConnectListener.call();
+          _disConnectListener?.call();
           break;
         case 0:
           TvListResult _tvList = TvListResult();
@@ -66,17 +66,14 @@ class Lblelinkplugin {
   static Future<bool> initLBSdk(String appid, String secretKey) async {
     //初始化的时候注册eventChannel回调
     eventChannelDistribution();
-    return _channel
-        .invokeMethod("initLBSdk", {"appid": appid, "secretKey": secretKey}).then((data){
-
-          return data;
+    return _channel.invokeMethod(
+        "initLBSdk", {"appid": appid, "secretKey": secretKey}).then((data) {
+      return data;
     });
-
 
     //初始化的时候注册eventChannel回调
 
     eventChannelDistribution();
-
   }
 
   //获取设备列表
@@ -99,30 +96,30 @@ class Lblelinkplugin {
   }
 
   //连接设备(参数未定)
-  static connectToService(String ipAddress,String name,
-      {@required Function fConnectListener,
-        @required Function fDisConnectListener}) {
+  static connectToService(String ipAddress, String name,
+      {required Function fConnectListener,
+      required Function fDisConnectListener}) {
     _connectListener = fConnectListener;
     _disConnectListener = fDisConnectListener;
-    _channel.invokeMethod("connectToService", {"ipAddress": ipAddress,"name":name});
+    _channel.invokeMethod(
+        "connectToService", {"ipAddress": ipAddress, "name": name});
   }
 
-
   //获取上次连接的设备
-  static Future<TvData> getLastConnectService(){
-    return _channel.invokeMethod("getLastConnectService").then((data){
-
-      print("data is ${data}");
+  static Future<TvData> getLastConnectService() {
+    return _channel.invokeMethod("getLastConnectService").then((data) {
+      print("data is $data");
 
 //      if (data == null){
 //        return data;
 //      }
 
-      return TvData()..uId = data["tvUID"]..name = data["tvName"]..ipAddress = data["ipAddress"];
-
+      return TvData()
+        ..uId = data["tvUID"]
+        ..name = data["tvName"]
+        ..ipAddress = data["ipAddress"];
     });
   }
-
 
   //断开连接
   static disConnect() {
@@ -161,28 +158,15 @@ class Lblelinkplugin {
 }
 
 abstract class LbCallBack {
-  void startCallBack(){
+  void startCallBack() {}
 
-  }
+  void loadingCallBack() {}
 
-  void loadingCallBack(){
+  void completeCallBack() {}
 
-  }
+  void pauseCallBack() {}
 
-  void completeCallBack(){
+  void stopCallBack() {}
 
-  }
-
-  void pauseCallBack(){
-
-  }
-
-  void stopCallBack(){
-
-  }
-
-  void errorCallBack(String errorDes){
-
-  }
-
+  void errorCallBack(String errorDes) {}
 }

@@ -37,7 +37,7 @@ class LBbloc with LbCallBack {
 
   ///连接数据
   void connectData() {
-    Lblelinkplugin.connectToService("uuId",
+    Lblelinkplugin.connectToService("uuId", "",
         fConnectListener: () {
 
         }, fDisConnectListener: () {

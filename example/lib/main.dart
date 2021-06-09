@@ -127,7 +127,7 @@ class _MyAppState extends State<MyApp> {
                       ],
                     ),
                     onTap: () {
-                      Lblelinkplugin.connectToService(_serviceNames[index].ipAddress,
+                      Lblelinkplugin.connectToService(_serviceNames[index].ipAddress, _serviceNames[index].name,
                           fConnectListener: () {}, fDisConnectListener: () {});
                     },
                   );
