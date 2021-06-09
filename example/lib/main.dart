@@ -28,22 +28,22 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await Lblelinkplugin.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
+    // String platformVersion;
+    // // Platform messages may fail, so we use a try/catch PlatformException.
+    // // try {
+    // //   platformVersion = await Lblelinkplugin.platformVersion;
+    // // } on PlatformException {
+    // //   platformVersion = 'Failed to get platform version.';
+    // // }
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
-    if (!mounted) return;
+    // if (!mounted) return;
 
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+    // setState(() {
+    //   _platformVersion = platformVersion;
+    // });
   }
 
   @override
@@ -87,7 +87,7 @@ class _MyAppState extends State<MyApp> {
                 FlatButton(
                     onPressed: () {
                       Lblelinkplugin.play(
-                          'http://pullhls80d25490.live.126.net/live/7d9cc146131245ddbf2126d56c699191/playlist.m3u8');
+                          'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4');
                     },
                     child: Text("开始投屏")),
                 FlatButton(
@@ -115,6 +115,7 @@ class _MyAppState extends State<MyApp> {
             Container(
               height: 400,
               width: 300,
+              color: Colors.lightBlueAccent,
               child: ListView.separated(
                 itemCount: _serviceNames.length,
                 itemBuilder: (ctx, index) {
