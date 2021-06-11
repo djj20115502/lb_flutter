@@ -101,8 +101,8 @@ class Lblelinkplugin {
     });
   }
 
-  //初始化sdk
-  //返回值：初始化成功与否
+  ///初始化sdk
+  ///返回值：初始化成功与否
   static Future<bool> initLBSdk(String appid, String secretKey) async {
     //初始化的时候注册eventChannel回调
     eventChannelDistribution();
@@ -112,8 +112,8 @@ class Lblelinkplugin {
     });
   }
 
-  //获取设备列表
-  //回调：设备数组
+  ///获取设备列表
+  ///回调：设备数组
   static getServicesList(ValueChanged<List<TvData>> serviecListener) {
     //开始搜索设备
     _channel.invokeMethod("beginSearchEquipment");
@@ -131,7 +131,7 @@ class Lblelinkplugin {
 //    });
   }
 
-  //连接设备(参数未定)
+  ///连接设备(参数未定)
   static connectToService(String ipAddress, String name,
       {required Function fConnectListener,
       required Function fDisConnectListener}) {
@@ -141,14 +141,14 @@ class Lblelinkplugin {
         "connectToService", {"ipAddress": ipAddress, "name": name});
   }
 
-  //获取上次连接的设备
+  ///获取上次连接的设备
   static Future<TvData> getLastConnectService() {
     return _channel.invokeMethod("getLastConnectService").then((data) {
       print("data is $data");
 
-//      if (data == null){
-//        return data;
-//      }
+     if (data == null){
+       return data;
+     }
 
       return TvData()
         ..uId = data["tvUID"]
@@ -157,7 +157,7 @@ class Lblelinkplugin {
     });
   }
 
-  //断开连接
+  ///断开连接
   static disConnect() {
     _channel.invokeMethod("disConnect");
 //        .then((data){
@@ -167,24 +167,24 @@ class Lblelinkplugin {
 //    });
   }
 
-  //暂停
+  ///暂停
   static pause() {
     _channel.invokeMethod("pause");
   }
 
-  //继续播放
+  ///继续播放
   static resumePlay() {
     _channel.invokeMethod("resumePlay");
   }
 
-  //退出播放
+  ///退出播放
   static stop() {
     _channel.invokeMethod("stop");
   }
 
-  //播放
-  static play(String playUrlString) {
-    _channel.invokeMethod("play", {"playUrlString": playUrlString});
+  ///播放
+  static play(String playUrlString, {int position = 0}) {
+    _channel.invokeMethod("play", {"playUrlString": playUrlString, "startPosition": position});
   }
 
   static Future<String> get platformVersion async {

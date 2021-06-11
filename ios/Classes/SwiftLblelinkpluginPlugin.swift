@@ -40,7 +40,7 @@ public class SwiftLblelinkpluginPlugin: NSObject, FlutterPlugin {
             LBPlayerManager.shareInstance.stop();
         break
         case "play":
-            LBPlayerManager.shareInstance.beginPlay(connection: LMLBSDKManager.shareInstance.linkConnection, playUrl: dict?["playUrlString"] ?? "");
+            LBPlayerManager.shareInstance.beginPlay(connection: LMLBSDKManager.shareInstance.linkConnection, playUrl: dict?["playUrlString"] ?? "", startPosition: Int(dict?["startPosition"] ?? "0") ?? 0);
         break
         case "getLastConnectService":
             LMLBSDKManager.shareInstance.getLastConnectService(result: result)
