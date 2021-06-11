@@ -168,7 +168,7 @@ class _MyAppState extends State<MyApp> with LbCallBack {
                           value: progress.current / progress.duration,
                         );
                       },
-                      stream: Lblelinkplugin.playingStream,
+                      stream: Lblelinkplugin.progressStream,
                     ),
                   )
                 ]),
