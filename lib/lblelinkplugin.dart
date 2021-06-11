@@ -3,6 +3,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:lb_flutter/tv_list.dart';
 
+/// LBLelinkPlayStatusUnkown = 0,    // 未知状态
+/// LBLelinkPlayStatusLoading,       // 视频正在加载状态
+/// LBLelinkPlayStatusPlaying,       // 正在播放状态
+/// LBLelinkPlayStatusPause,         // 暂停状态
+/// LBLelinkPlayStatusStopped,       // 退出播放状态
+/// LBLelinkPlayStatusCommpleted,    // 播放完成状态
+/// LBLelinkPlayStatusError,         // 播放错误
+enum PlayStatus {
+  unkown,
+  loading,
+  playing,
+  pause,
+  stoped,
+  completed,
+  error
+}
+
 class Lblelinkplugin {
   static const MethodChannel _channel = const MethodChannel('lblelinkplugin');
   static const EventChannel _eventChannel =
@@ -16,10 +33,13 @@ class Lblelinkplugin {
   static LbCallBack? _lbCallBack;
 
   //public
+  static StreamController<ProgressInfo> _progressStreamController = StreamController();
   ///播放进度流
-  static StreamController<ProgressInfo> _playingStreamController =
-      StreamController();
-  static Stream<ProgressInfo> playingStream = _playingStreamController.stream;
+  static Stream<ProgressInfo> progressStream = _progressStreamController.stream;
+  
+  static StreamController<PlayStatus> _playStatusStreamController = StreamController();
+  ///播放状态流
+  static Stream<PlayStatus> playStatusStream = _playStatusStreamController.stream;
 
   static set lbCallBack(LbCallBack value) {
     _lbCallBack = value;
@@ -44,21 +64,27 @@ class Lblelinkplugin {
           break;
         case 2:
           _lbCallBack?.loadingCallBack();
+          _playStatusStreamController.add(PlayStatus.loading);
           break;
         case 3:
           _lbCallBack?.startCallBack();
+          _playStatusStreamController.add(PlayStatus.playing);
           break;
         case 4:
           _lbCallBack?.pauseCallBack();
+          _playStatusStreamController.add(PlayStatus.pause);
           break;
         case 5:
-          _lbCallBack?.pauseCallBack();
+          _lbCallBack?.completeCallBack();
+          _playStatusStreamController.add(PlayStatus.completed);
           break;
         case 6:
           _lbCallBack?.stopCallBack();
+          _playStatusStreamController.add(PlayStatus.stoped);
           break;
         case 9:
           _lbCallBack?.errorCallBack(data["data"]);
+          _playStatusStreamController.add(PlayStatus.error);
           break;
         case 10:
           if (data["data"] is Map) {
@@ -66,7 +92,7 @@ class Lblelinkplugin {
             final progressInfo = ProgressInfo(
                 current: info['current'], duration: info['duration']);
             //通知流变更
-            _playingStreamController.add(progressInfo);
+            _progressStreamController.add(progressInfo);
             //通知回调变更
             _lbCallBack?.playingCallBack(progressInfo);
           }
