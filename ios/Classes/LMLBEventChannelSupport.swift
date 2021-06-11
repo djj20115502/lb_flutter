@@ -82,10 +82,10 @@ class LMLBEventChannelSupport: NSObject,FlutterPlugin, FlutterStreamHandler{
     }
     
     //一般输出（例如连接成功等）
-    func sendCommonDesToFlutter(type: ResultType,des: String){
+    func sendCommonDataToFlutter(type: ResultType, data: Any){
         if let sink = self.eventSink{
             
-            sink(self.createResult(type: type, data: des))
+            sink(self.createResult(type: type, data: data))
         
         }
     }

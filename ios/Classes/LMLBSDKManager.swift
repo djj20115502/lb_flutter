@@ -166,7 +166,7 @@ extension LMLBSDKManager: LBLelinkConnectionDelegate{
         //连接成功的话保存该设备
         self.linkBrowser.save([service])
         
-        LMLBEventChannelSupport.sharedInstance.sendCommonDesToFlutter(type: .connect, des: "连接\(String(describing: service.lelinkServiceName))成功")
+        LMLBEventChannelSupport.sharedInstance.sendCommonDataToFlutter(type: .connect, data: "连接\(String(describing: service.lelinkServiceName))成功")
         
     }
     
@@ -174,7 +174,7 @@ extension LMLBSDKManager: LBLelinkConnectionDelegate{
     func lelinkConnection(_ connection: LBLelinkConnection, disConnectTo service: LBLelinkService) {
         print("连接断开");
         
-        LMLBEventChannelSupport.sharedInstance.sendCommonDesToFlutter(type: .disConnect, des: "与\(String(describing: service.lelinkServiceName))断开连接")
+        LMLBEventChannelSupport.sharedInstance.sendCommonDataToFlutter(type: .disConnect, data: "与\(String(describing: service.lelinkServiceName))断开连接")
         
     }
     

@@ -15,6 +15,12 @@ class Lblelinkplugin {
   static Function? _disConnectListener;
   static LbCallBack? _lbCallBack;
 
+  //public
+  ///播放进度流
+  static StreamController<ProgressInfo> _playingStreamController =
+      StreamController();
+  static Stream<ProgressInfo> playingStream = _playingStreamController.stream;
+
   static set lbCallBack(LbCallBack value) {
     _lbCallBack = value;
   } //eventChannel监听分发中心
@@ -54,8 +60,16 @@ class Lblelinkplugin {
         case 9:
           _lbCallBack?.errorCallBack(data["data"]);
           break;
-        default:
-          print(data["data"]);
+        case 10:
+          if (data["data"] is Map) {
+            final info = data["data"];
+            final progressInfo = ProgressInfo(
+                current: info['current'], duration: info['duration']);
+            //通知流变更
+            _playingStreamController.add(progressInfo);
+            //通知回调变更
+            _lbCallBack?.playingCallBack(progressInfo);
+          }
           break;
       }
     });
@@ -165,4 +179,6 @@ abstract class LbCallBack {
   void stopCallBack() {}
 
   void errorCallBack(String errorDes) {}
+
+  void playingCallBack(Object data) {}
 }

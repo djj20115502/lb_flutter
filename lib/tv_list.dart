@@ -25,3 +25,9 @@ class TvData {
   late String uId;
   late String ipAddress;
 }
+
+class ProgressInfo {
+  int current;
+  int duration;
+  ProgressInfo({required this.current, required this.duration});
+}

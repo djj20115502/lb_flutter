@@ -36,11 +36,7 @@ class LBbloc with LbCallBack {
   ///连接数据
   void connectData() {
     Lblelinkplugin.connectToService("uuId", "",
-        fConnectListener: () {
-
-        }, fDisConnectListener: () {
-
-        });
+        fConnectListener: () {}, fDisConnectListener: () {});
   }
 
   ///断开连接
@@ -76,5 +72,10 @@ class LBbloc with LbCallBack {
   @override
   void stopCallBack() {
     // 停止事件回调
+  }
+
+  @override
+  void playingCallBack(Object data) {
+    print(data);
   }
 }

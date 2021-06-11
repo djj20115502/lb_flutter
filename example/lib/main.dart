@@ -5,6 +5,8 @@ import 'dart:async';
 import 'package:lb_flutter/tv_list.dart';
 import 'package:flutter/services.dart';
 import 'package:lb_flutter/lblelinkplugin.dart';
+import 'package:lblelinkplugin_example/lb_bloc.dart';
+import 'package:collection/collection.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,7 +15,7 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with LbCallBack {
   String _platformVersion = 'Unknown';
 
   List<TvData> _serviceNames = [];
@@ -22,8 +24,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initPlatformState();
+  }
 
-
+  @override
+  void playingCallBack(Object data) {
+    print(data);
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -55,89 +60,118 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Row(
           children: <Widget>[
-            Column(
-              children: <Widget>[
-                FlatButton(
-                    onPressed: () {
-                      Lblelinkplugin.initLBSdk(
-                          "14342", "c67255e53e3feee87673bc67f6895360");
-                      Lblelinkplugin.eventChannelDistribution();
-                    },
-                    child: Text("初始化")),
-                FlatButton(
-                    onPressed: () {
-                      Lblelinkplugin.getServicesList((data) {
-                        setState(() {
-                          _serviceNames.addAll(data);
+            SizedBox(
+              width: 100,
+              child: Column(
+                children: <Widget>[
+                  FlatButton(
+                      onPressed: () {
+                        Lblelinkplugin.initLBSdk(
+                            "xxx", "xxxxxxxx");
+                        Lblelinkplugin.eventChannelDistribution();
+                      },
+                      child: Text("初始化")),
+                  FlatButton(
+                      onPressed: () {
+                        Lblelinkplugin.getServicesList((data) {
+                          data.forEach((e) {
+                            if(_serviceNames.firstWhereOrNull((e2) => e2.ipAddress == e.ipAddress && e2.name == e.name) == null) {
+                              _serviceNames.add(e);
+                            }
+                          });
+                          setState(() {
+                            
+                          });
                         });
-                      });
-                    },
-                    child: Text("搜索设备")),
-                FlatButton(
-                    onPressed: () {
+                      },
+                      child: Text("搜索设备")),
+                  FlatButton(
+                      onPressed: () {
+                        Lblelinkplugin.getLastConnectService().then((value) {
+                          print("上次设备是：${value}");
+                        });
+                      },
+                      child: Text("上次设备")),
+                  FlatButton(
+                      onPressed: () {
+                        Lblelinkplugin.play(
+                            'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4');
+                      },
+                      child: Text("开始投屏")),
+                  FlatButton(
+                      onPressed: () {
+                        Lblelinkplugin.pause();
 
-                      Lblelinkplugin.getLastConnectService().then((value){
-
-                        print("上次设备是：${value}");
-
-                      });
-
-                    },
-                    child: Text("上次设备")),
-                FlatButton(
-                    onPressed: () {
-                      Lblelinkplugin.play(
-                          'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4');
-                    },
-                    child: Text("开始投屏")),
-                FlatButton(
-                    onPressed: () {
-//                      Lblelinkplugin.pause();
-
-                      Lblelinkplugin.getLastConnectService().then((data){
-                        print("******${data.ipAddress},${data.name},${data.uId}");
-                      });
-                    
-                    },
-                    child: Text("暂停")),
-                FlatButton(
-                    onPressed: () {
-                      Lblelinkplugin.resumePlay();
-                    },
-                    child: Text("继续")),
-                FlatButton(
-                    onPressed: () {
-                      Lblelinkplugin.stop();
-                    },
-                    child: Text("结束"))
-              ],
+                        Lblelinkplugin.getLastConnectService().then((data) {
+                          print(
+                              "******${data.ipAddress},${data.name},${data.uId}");
+                        });
+                      },
+                      child: Text("暂停")),
+                  FlatButton(
+                      onPressed: () {
+                        Lblelinkplugin.resumePlay();
+                      },
+                      child: Text("继续")),
+                  FlatButton(
+                      onPressed: () {
+                        Lblelinkplugin.stop();
+                      },
+                      child: Text("结束"))
+                ],
+              ),
             ),
-            Container(
-              height: 400,
-              width: 300,
-              color: Colors.lightBlueAccent,
-              child: ListView.separated(
-                itemCount: _serviceNames.length,
-                itemBuilder: (ctx, index) {
-                  return GestureDetector(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text("设备名称：${_serviceNames[index].name}"),
-                        Text("ipAddress：${_serviceNames[index].ipAddress}"),
-                      ],
+            Expanded(
+              child: Container(
+                // height: 400,
+                color: Colors.lightBlueAccent,
+                child: Column(children: [
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: _serviceNames.length,
+                      itemBuilder: (ctx, index) {
+                        return GestureDetector(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text("设备名称：${_serviceNames[index].name}"),
+                              Text(
+                                  "ipAddress：${_serviceNames[index].ipAddress}"),
+                            ],
+                          ),
+                          onTap: () {
+                            Lblelinkplugin.connectToService(
+                                _serviceNames[index].ipAddress,
+                                _serviceNames[index].name,
+                                fConnectListener: () {},
+                                fDisConnectListener: () {});
+                          },
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          Container(
+                        color: Colors.grey,
+                        height: 1,
+                      ),
                     ),
-                    onTap: () {
-                      Lblelinkplugin.connectToService(_serviceNames[index].ipAddress, _serviceNames[index].name,
-                          fConnectListener: () {}, fDisConnectListener: () {});
-                    },
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) =>
-                    Container(
-                  color: Colors.grey,
-                  height: 1,
-                ),
+                  ),
+                  SizedBox(
+                    height: 44,
+                    child: StreamBuilder<ProgressInfo>(
+                      builder: (context, snapshot) {
+                        final progress = snapshot.data;
+                        if (progress == null ||
+                            progress.duration == 0 ||
+                            progress.duration.isNaN ||
+                            progress.duration.isInfinite) return Container();
+                        return LinearProgressIndicator(
+                          value: progress.current / progress.duration,
+                        );
+                      },
+                      stream: Lblelinkplugin.playingStream,
+                    ),
+                  )
+                ]),
               ),
             )
           ],
@@ -145,5 +179,4 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
-
 }
