@@ -22,7 +22,7 @@ class TvListResult {
 
 class TvData {
   late String name;
-  late String uId;
+  String? uId;
   late String ipAddress;
 }
 
