@@ -1,6 +1,7 @@
 package com.example.lblelinkplugin
 
 import android.content.Context
+import android.util.Log
 import androidx.annotation.NonNull;
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
@@ -85,7 +86,7 @@ public class LblelinkpluginPlugin : FlutterPlugin, MethodCallHandler {
         LeBUtil.instance.stopSearch()
       }
       "play" -> {
-        LeBUtil.instance.play(call.argument<String>("playUrlString")!!)
+        LeBUtil.instance.play(call.argument<String>("playUrlString")!!,call.argument<Int>("startPosition")?:0,call.argument<Int>("playType")?:102)
       }
       "getLastConnectService"->{
         LeBUtil.instance.getLastIp(result)

@@ -52,6 +52,7 @@ class Lblelinkplugin {
 
       switch (type) {
         case -1:
+          _lbCallBack?.disconnect();
           _disConnectListener?.call();
           break;
         case 0:
@@ -60,6 +61,7 @@ class Lblelinkplugin {
           _serviecListener?.call(_tvList.tvList);
           break;
         case 1:
+          _lbCallBack?.connectingCast();
           _connectListener?.call();
           break;
         case 2:
@@ -96,6 +98,9 @@ class Lblelinkplugin {
             //通知回调变更
             _lbCallBack?.playingCallBack(progressInfo);
           }
+          break;
+        case 11:
+          _lbCallBack?.connectSuccess(data["data"].toString());
           break;
       }
     });
@@ -137,6 +142,7 @@ class Lblelinkplugin {
       required Function fDisConnectListener}) {
     _connectListener = fConnectListener;
     _disConnectListener = fDisConnectListener;
+    _lbCallBack?.connectingCast();
     _channel.invokeMethod(
         "connectToService", {"ipAddress": ipAddress, "name": name});
   }
@@ -183,8 +189,8 @@ class Lblelinkplugin {
   }
 
   ///播放
-  static play(String playUrlString, {int position = 0}) {
-    _channel.invokeMethod("play", {"playUrlString": playUrlString, "startPosition": position});
+  static play(String playUrlString, {int position = 0,int type = 102}) {
+    _channel.invokeMethod("play", {"playUrlString": playUrlString, "startPosition": position,"playType":type});
   }
 
   static Future<String> get platformVersion async {
@@ -206,5 +212,11 @@ abstract class LbCallBack {
 
   void errorCallBack(String errorDes) {}
 
-  void playingCallBack(Object data) {}
+  void playingCallBack(ProgressInfo data) {}
+
+  void connectSuccess(String playerInfo){}
+
+  void connectingCast(){}
+
+  void disconnect(){}
 }

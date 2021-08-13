@@ -8,6 +8,7 @@ import com.hpplay.sdk.source.api.ILelinkPlayerListener
 import com.hpplay.sdk.source.api.LelinkPlayerInfo
 import com.hpplay.sdk.source.api.LelinkSourceSDK
 import com.hpplay.sdk.source.browse.api.LelinkServiceInfo
+import com.hpplay.sdk.source.player.LelinkCastPlayer
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -43,7 +44,7 @@ class LeBUtil private constructor() {
                 override fun onConnect(p0: LelinkServiceInfo?, p1: Int) {
                     Observable.just(p0).observeOn(AndroidSchedulers.mainThread()).subscribe {
                         events?.success(
-                                buildResult(ResultType.connect, "connect")
+                                buildResult(ResultType.connected, p0?.name)
                         )
                         p0!!.run {
                             lastLinkIp = ip
@@ -56,6 +57,7 @@ class LeBUtil private constructor() {
                 }
 
                 override fun onDisconnect(p0: LelinkServiceInfo?, p1: Int, p2: Int) {
+                    Log.d("乐播云", "断开连接")
                     events?.success(
                             buildResult(ResultType.disConnect, "disConnect")
                     )
@@ -118,9 +120,10 @@ class LeBUtil private constructor() {
 
             override fun onPositionUpdate(p0: Long, p1: Long) {
                 Log.d("乐播云", "onPositionUpdate")
+                Log.d("乐播云", "${mapOf("current" to p1, "duration" to p0)}")
 //                events?.success(Result().addParam("type", ResultType.position))
                 Observable.just(1).observeOn(AndroidSchedulers.mainThread()).subscribe {
-                    events?.success(buildResult(ResultType.position, "onPositionUpdate"))
+                    events?.success(buildResult(ResultType.position, mapOf("current" to p1, "duration" to p0)))
                 }
             }
 
@@ -170,7 +173,7 @@ class LeBUtil private constructor() {
         }
 //        sdk.connect(selectLelinkServiceInfo)
         events?.success(
-                buildResult(ResultType.connect, null)
+                buildResult(ResultType.connect, name)
         )
     }
 
@@ -185,8 +188,15 @@ class LeBUtil private constructor() {
 
     ///设备断链
     fun disConnect(@NonNull result: MethodChannel.Result) {
+        if (sdk.connectInfos.size == 0) {
+            return
+        }
         sdk.connectInfos.run {
             if (sdk.disConnect(this[0])) {
+                events?.success(
+                        buildResult(ResultType.disConnect, "disConnect")
+                )
+                Log.d("乐播云", "断开连接")
                 result.success(0)
             } else {
                 result.success(-1)
@@ -221,12 +231,21 @@ class LeBUtil private constructor() {
         sdk.startBrowse()
     }
 
-    fun play(url: String) {
+    fun play(url: String, position: Int, type: Int) {
         sdk.resume()
         var playerInfo = LelinkPlayerInfo()
         playerInfo.url = url
+        playerInfo.startPosition = position
         playerInfo.loopMode = LelinkPlayerInfo.LOOP_MODE_SINGLE
-        playerInfo.type = LelinkSourceSDK.MEDIA_TYPE_VIDEO
+        when (type) {
+            101 -> {
+                playerInfo.type = LelinkSourceSDK.MEDIA_TYPE_AUDIO
+            }
+            102 -> {
+                playerInfo.type = LelinkSourceSDK.MEDIA_TYPE_VIDEO
+            }
+        }
+
         playerInfo.lelinkServiceInfo = selectLelinkServiceInfo
         playerInfo.header = "{\"referer\":\"app1.kkkanju.com\"}"
         sdk.startPlayMedia(playerInfo)
