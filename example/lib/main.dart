@@ -193,29 +193,40 @@ class _MyAppState extends State<MyApp> with LbCallBack {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 44,
-                    child: StreamBuilder<VideoInfo>(
-                      key: _key,
-                      builder: (context, snapshot) {
-                        final progress = snapshot.data;
-                        if (progress == null ||
-                            progress.duration == 0 ||
-                            (progress.duration).isNaN ||
-                            (progress.duration).isInfinite)
-                          return Container();
-                        return LinearProgressIndicator(
-                          value: (progress.currentPosition ?? 0) /
-                              (progress.duration),
-                        );
-                      },
-                      stream: Lblelinkplugin.progressStream
+                  StreamBuilder<VideoInfo>(
+                    key: _key,
+                    builder: (context, snapshot) {
+                      final progress = snapshot.data;
+                      if (progress == null ||
+                          (progress.duration).isNaN ||
+                          (progress.duration).isInfinite) return Container();
+                      print('isPlaying ====> ${progress.isPlaying}');
+                      return SizedBox(
+                        height: 200,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 50,
+                              child: LinearProgressIndicator(
+                                value: progress.duration > 0 ? ((progress.currentPosition ?? 0) /
+                                    (progress.duration)) : 0,
+                              ),
+                            ),
+                            IconButton(
+                                icon: Icon(progress.isPlaying
+                                    ? Icons.pause
+                                    : Icons.play_arrow),
+                                onPressed: () {})
+                          ],
+                        ),
+                      );
+                    },
+                    stream: Lblelinkplugin.progressStream
                         .map((event) => VideoInfo.fromMap({
                               'currentPosition': event.current,
                               'duration': event.duration,
                               'isPlaying': event.isPlaying
                             })),
-                    ),
                   )
                 ]),
               ),

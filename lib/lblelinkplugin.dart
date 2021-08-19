@@ -74,10 +74,12 @@ class Lblelinkplugin {
           _playStatusStreamController.add(PlayStatus.playing);
           break;
         case 4:
-          _lbCallBack?.pauseCallBack();
-          _progressStreamController
-              .add(ProgressInfo.fromMap({'isPlaying': false}));
-          _playStatusStreamController.add(PlayStatus.pause);
+          Future.delayed(Duration(milliseconds: 500), () {//有什么办法处理？
+            _lbCallBack?.pauseCallBack();
+            _progressStreamController
+                .add(ProgressInfo.fromMap({'isPlaying': false}));
+            _playStatusStreamController.add(PlayStatus.pause);
+          });
           break;
         case 5:
           _lbCallBack?.completeCallBack();
