@@ -40,6 +40,8 @@ class _MyAppState extends State<MyApp> with LbCallBack {
 
   List<TvData> _serviceNames = [];
 
+  var _key = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -193,20 +195,26 @@ class _MyAppState extends State<MyApp> with LbCallBack {
                   ),
                   SizedBox(
                     height: 44,
-                    child: StreamBuilder<ProgressInfo>(
+                    child: StreamBuilder<VideoInfo>(
+                      key: _key,
                       builder: (context, snapshot) {
                         final progress = snapshot.data;
                         if (progress == null ||
                             progress.duration == 0 ||
-                            (progress.duration ?? 0).isNaN ||
-                            (progress.duration ?? 0).isInfinite)
+                            (progress.duration).isNaN ||
+                            (progress.duration).isInfinite)
                           return Container();
                         return LinearProgressIndicator(
-                          value: (progress.current ?? 0) /
-                              (progress.duration ?? 0),
+                          value: (progress.currentPosition ?? 0) /
+                              (progress.duration),
                         );
                       },
-                      stream: Lblelinkplugin.progressStream,
+                      stream: Lblelinkplugin.progressStream
+                        .map((event) => VideoInfo.fromMap({
+                              'currentPosition': event.current,
+                              'duration': event.duration,
+                              'isPlaying': event.isPlaying
+                            })),
                     ),
                   )
                 ]),

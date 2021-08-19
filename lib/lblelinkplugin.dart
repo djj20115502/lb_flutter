@@ -26,7 +26,7 @@ class Lblelinkplugin {
 
   //public
   static StreamController<ProgressInfo> _progressStreamController =
-      StreamController();
+      StreamController.broadcast();
 
   ///播放进度流
   static Stream<ProgressInfo> progressStream = _progressStreamController.stream;

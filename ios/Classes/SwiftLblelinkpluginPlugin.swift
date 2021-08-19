@@ -15,17 +15,17 @@ public class SwiftLblelinkpluginPlugin: NSObject, FlutterPlugin {
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     
-    let dict = call.arguments as? [String:String]
+    let dict = call.arguments as? [String:Any]
     
     switch call.method {
         case "initLBSdk":
-        LMLBSDKManager.shareInstance.initLBSDK(appid: dict?["appid"] ?? "", secretKey: dict?["secretKey"] ?? "",result: result);
+        LMLBSDKManager.shareInstance.initLBSDK(appid: (dict?["appid"] as? String) ?? "", secretKey: (dict?["secretKey"] as? String) ?? "",result: result);
         break
         case "beginSearchEquipment":
             LMLBSDKManager.shareInstance.beginSearchEquipment()
         break
         case "connectToService":
-            LMLBSDKManager.shareInstance.linkToService(ipAddress: dict?["ipAddress"] ?? "");
+            LMLBSDKManager.shareInstance.linkToService(ipAddress: dict?["ipAddress"] as? String ?? "");
         break
         case "disConnect":
             LMLBSDKManager.shareInstance.disConnect();
@@ -40,7 +40,7 @@ public class SwiftLblelinkpluginPlugin: NSObject, FlutterPlugin {
             LBPlayerManager.shareInstance.stop();
         break
         case "play":
-            LBPlayerManager.shareInstance.beginPlay(connection: LMLBSDKManager.shareInstance.linkConnection, playUrl: dict?["playUrlString"] ?? "", startPosition: Int(dict?["startPosition"] ?? "0") ?? 0);
+            LBPlayerManager.shareInstance.beginPlay(connection: LMLBSDKManager.shareInstance.linkConnection, playUrl: (dict?["playUrlString"] as? String) ?? "", startPosition: Int((dict?["startPosition"] as? String) ?? "0") ?? 0);
         break
         case "getLastConnectService":
             LMLBSDKManager.shareInstance.getLastConnectService(result: result)
