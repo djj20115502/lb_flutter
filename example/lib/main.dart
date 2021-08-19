@@ -162,10 +162,10 @@ class _MyAppState extends State<MyApp> with LbCallBack {
                         final progress = snapshot.data;
                         if (progress == null ||
                             progress.duration == 0 ||
-                            progress.duration.isNaN ||
-                            progress.duration.isInfinite) return Container();
+                            (progress.duration??0).isNaN ||
+                            (progress.duration??0).isInfinite) return Container();
                         return LinearProgressIndicator(
-                          value: progress.current / progress.duration,
+                          value: (progress.current??0) /( progress.duration??0),
                         );
                       },
                       stream: Lblelinkplugin.progressStream,

@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'lblelinkplugin.dart';
+
 ///
 /// @ProjectName:    lblelink_plugin
 /// @ClassName:      tv_list
@@ -27,7 +31,35 @@ class TvData {
 }
 
 class ProgressInfo {
-  int current;
-  int duration;
-  ProgressInfo({required this.current, required this.duration});
+  int? current;
+  int? duration;
+  PlayStatus? playStatus;
+  bool?  isPlaying =false;
+
+  Map<String, dynamic>? _map;
+  ///Is there any information?
+  bool get hasData => _map != null;
+  double get progress => (current ?? 0) / (duration ?? 0);
+  // ProgressInfo({ this.current,  this.duration,this.playStatus})
+
+  /// Constructing from the native method
+  ProgressInfo.fromMap(Map<String, dynamic>? map) {
+    if (map == null) {
+      return;
+    }
+    this._map = map;
+    this.current = map["current"];
+    this.duration = map["duration"];
+    this.isPlaying = map["isPlaying"];
+  }
+
+
+  @override
+  String toString() {
+    if (_map == null) {
+      return "null";
+    }
+    return json.encode(_map);
+  }
+
 }

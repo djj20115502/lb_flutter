@@ -10,15 +10,7 @@ import 'package:lb_flutter/tv_list.dart';
 /// LBLelinkPlayStatusStopped,       // 退出播放状态
 /// LBLelinkPlayStatusCommpleted,    // 播放完成状态
 /// LBLelinkPlayStatusError,         // 播放错误
-enum PlayStatus {
-  unkown,
-  loading,
-  playing,
-  pause,
-  stoped,
-  completed,
-  error
-}
+enum PlayStatus { unkown, loading, playing, pause, stoped, completed, error }
 
 class Lblelinkplugin {
   static const MethodChannel _channel = const MethodChannel('lblelinkplugin');
@@ -33,13 +25,18 @@ class Lblelinkplugin {
   static LbCallBack? _lbCallBack;
 
   //public
-  static StreamController<ProgressInfo> _progressStreamController = StreamController();
+  static StreamController<ProgressInfo> _progressStreamController =
+      StreamController();
+
   ///播放进度流
   static Stream<ProgressInfo> progressStream = _progressStreamController.stream;
-  
-  static StreamController<PlayStatus> _playStatusStreamController = StreamController();
+
+  static StreamController<PlayStatus> _playStatusStreamController =
+      StreamController();
+
   ///播放状态流
-  static Stream<PlayStatus> playStatusStream = _playStatusStreamController.stream;
+  static Stream<PlayStatus> playStatusStream =
+      _playStatusStreamController.stream;
 
   static set lbCallBack(LbCallBack value) {
     _lbCallBack = value;
@@ -66,33 +63,48 @@ class Lblelinkplugin {
           break;
         case 2:
           _lbCallBack?.loadingCallBack();
+          _progressStreamController
+              .add(ProgressInfo.fromMap({'isPlaying': false}));
           _playStatusStreamController.add(PlayStatus.loading);
           break;
         case 3:
           _lbCallBack?.startCallBack();
+          _progressStreamController
+              .add(ProgressInfo.fromMap({'isPlaying': true}));
           _playStatusStreamController.add(PlayStatus.playing);
           break;
         case 4:
           _lbCallBack?.pauseCallBack();
+          _progressStreamController
+              .add(ProgressInfo.fromMap({'isPlaying': false}));
           _playStatusStreamController.add(PlayStatus.pause);
           break;
         case 5:
           _lbCallBack?.completeCallBack();
+          _progressStreamController
+              .add(ProgressInfo.fromMap({'isPlaying': false}));
           _playStatusStreamController.add(PlayStatus.completed);
           break;
         case 6:
           _lbCallBack?.stopCallBack();
+          _progressStreamController
+              .add(ProgressInfo.fromMap({'isPlaying': false}));
           _playStatusStreamController.add(PlayStatus.stoped);
           break;
         case 9:
           _lbCallBack?.errorCallBack(data["data"]);
+          _progressStreamController
+              .add(ProgressInfo.fromMap({'isPlaying': false}));
           _playStatusStreamController.add(PlayStatus.error);
           break;
         case 10:
           if (data["data"] is Map) {
             final info = data["data"];
-            final progressInfo = ProgressInfo(
-                current: info['current'], duration: info['duration']);
+            final progressInfo = ProgressInfo.fromMap({
+              'current': info['current'],
+              'duration': info['duration'],
+              'isPlaying': true
+            });
             //通知流变更
             _progressStreamController.add(progressInfo);
             //通知回调变更
@@ -152,9 +164,9 @@ class Lblelinkplugin {
     return _channel.invokeMethod("getLastConnectService").then((data) {
       print("data is $data");
 
-     if (data == null){
-       return data;
-     }
+      if (data == null) {
+        return data;
+      }
 
       return TvData()
         ..uId = data["tvUID"]
@@ -189,8 +201,12 @@ class Lblelinkplugin {
   }
 
   ///播放
-  static play(String playUrlString, {int position = 0,int type = 102}) {
-    _channel.invokeMethod("play", {"playUrlString": playUrlString, "startPosition": position,"playType":type});
+  static play(String playUrlString, {int position = 0, int type = 102}) {
+    _channel.invokeMethod("play", {
+      "playUrlString": playUrlString,
+      "startPosition": position,
+      "playType": type
+    });
   }
 
   static Future<String> get platformVersion async {
@@ -214,9 +230,9 @@ abstract class LbCallBack {
 
   void playingCallBack(ProgressInfo data) {}
 
-  void connectSuccess(String playerInfo){}
+  void connectSuccess(String playerInfo) {}
 
-  void connectingCast(){}
+  void connectingCast() {}
 
-  void disconnect(){}
+  void disconnect() {}
 }
