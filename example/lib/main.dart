@@ -8,6 +8,26 @@ import 'package:lb_flutter/lblelinkplugin.dart';
 import 'package:lblelinkplugin_example/lb_bloc.dart';
 import 'package:collection/collection.dart';
 
+class VideoInfo {
+  /// Total length of video
+  late double duration;
+
+  /// Current playback progress
+  double? currentPosition;
+
+  /// In play
+  bool isPlaying = false;
+
+  VideoInfo.fromMap(Map<String, dynamic>? map) {
+    if (map == null) {
+      return;
+    }
+    this.duration = map["duration"] ?? 0;
+    this.currentPosition = map["currentPosition"] ?? 0;
+    this.isPlaying = map["isPlaying"];
+  }
+}
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
@@ -67,7 +87,7 @@ class _MyAppState extends State<MyApp> with LbCallBack {
                   FlatButton(
                       onPressed: () {
                         Lblelinkplugin.initLBSdk(
-                            "xxx", "xxxxxxxx");
+                            "10664", "f691c6cc8faf37db2c5ed2b68ea3f97e");
                         Lblelinkplugin.eventChannelDistribution();
                       },
                       child: Text("初始化")),
@@ -75,13 +95,14 @@ class _MyAppState extends State<MyApp> with LbCallBack {
                       onPressed: () {
                         Lblelinkplugin.getServicesList((data) {
                           data.forEach((e) {
-                            if(_serviceNames.firstWhereOrNull((e2) => e2.ipAddress == e.ipAddress && e2.name == e.name) == null) {
+                            if (_serviceNames.firstWhereOrNull((e2) =>
+                                    e2.ipAddress == e.ipAddress &&
+                                    e2.name == e.name) ==
+                                null) {
                               _serviceNames.add(e);
                             }
                           });
-                          setState(() {
-                            
-                          });
+                          setState(() {});
                         });
                       },
                       child: Text("搜索设备")),
@@ -117,7 +138,22 @@ class _MyAppState extends State<MyApp> with LbCallBack {
                       onPressed: () {
                         Lblelinkplugin.stop();
                       },
-                      child: Text("结束"))
+                      child: Text("结束")),
+                  // StreamBuilder<VideoInfo>(
+                  //   stream: Lblelinkplugin.progressStream
+                  //       .map((event) => VideoInfo.fromMap({
+                  //             'currentPosition': event.current,
+                  //             'duration': event.duration,
+                  //             'isPlaying': event.isPlaying
+                  //           })),
+                  //   builder: (context, snapshot) {
+                  //     var info = snapshot.data;
+                  //     if (info == null) {
+                  //       return Container(height: 44, color: Colors.red,);
+                  //     }
+                  //     return TextButton(onPressed: (){}, child: Text(info.currentPosition.toString()));
+                  //   },
+                  // )
                 ],
               ),
             ),
@@ -162,10 +198,12 @@ class _MyAppState extends State<MyApp> with LbCallBack {
                         final progress = snapshot.data;
                         if (progress == null ||
                             progress.duration == 0 ||
-                            (progress.duration??0).isNaN ||
-                            (progress.duration??0).isInfinite) return Container();
+                            (progress.duration ?? 0).isNaN ||
+                            (progress.duration ?? 0).isInfinite)
+                          return Container();
                         return LinearProgressIndicator(
-                          value: (progress.current??0) /( progress.duration??0),
+                          value: (progress.current ?? 0) /
+                              (progress.duration ?? 0),
                         );
                       },
                       stream: Lblelinkplugin.progressStream,

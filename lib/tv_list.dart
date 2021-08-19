@@ -31,8 +31,8 @@ class TvData {
 }
 
 class ProgressInfo {
-  int? current;
-  int? duration;
+  double? current;
+  double? duration;
   PlayStatus? playStatus;
   bool?  isPlaying =false;
 
@@ -48,8 +48,8 @@ class ProgressInfo {
       return;
     }
     this._map = map;
-    this.current = map["current"];
-    this.duration = map["duration"];
+    this.current = (map["current"] as int?)?.toDouble() ?? 0;
+    this.duration = (map["duration"] as int?)?.toDouble() ?? 0;
     this.isPlaying = map["isPlaying"];
   }
 
