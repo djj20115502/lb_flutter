@@ -89,7 +89,7 @@ class _MyAppState extends State<MyApp> with LbCallBack {
                   FlatButton(
                       onPressed: () {
                         Lblelinkplugin.initLBSdk(
-                            "10664", "f691c6cc8faf37db2c5ed2b68ea3f97e");
+                            "xxx", "xxx");
                         Lblelinkplugin.eventChannelDistribution();
                       },
                       child: Text("初始化")),
