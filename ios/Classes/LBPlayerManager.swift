@@ -13,12 +13,12 @@ class LBPlayerManager: NSObject {
     static let shareInstance = LBPlayerManager()
     
     //开始播放
-    func beginPlay(connection: LBLelinkConnection, playUrl: String, startPosition: Int = 0){
+    func beginPlay(connection: LBLelinkConnection, playUrl: String, startPosition: Int = 0, mediaType: Int = 0){
        
        self.player.lelinkConnection = connection;
        
        let playItem = LBLelinkPlayerItem()
-       playItem.mediaType = .videoOnline;
+        playItem.mediaType = mediaType == 102 ? .videoOnline : .audioOnline;
        playItem.mediaURLString = playUrl
        playItem.startPosition = startPosition;
        self.player.play(with: playItem)
