@@ -15,13 +15,6 @@ class LMLBSDKManager: NSObject {
     
     //初始化乐播sdk
     func initLBSDK(appid: String,secretKey: String,result: @escaping FlutterResult){
-        
-        #if DEBUG
-        LBLelinkKit.enableLog(true);
-        #else
-        
-        #endif
-        
         let authResult: Bool = ((try? LBLelinkKit.auth(withAppid: appid, secretKey: secretKey)) != nil)
         
         if (authResult){
@@ -35,6 +28,11 @@ class LMLBSDKManager: NSObject {
         //注册成为互动广告的监听者
         LBLelinkKit.registerAsInteractiveAdObserver()
         
+    }
+    
+    //log开关
+    func enableLog(enable: Bool) {
+        LBLelinkKit.enableLog(enable);
     }
     
     //开始搜索设备

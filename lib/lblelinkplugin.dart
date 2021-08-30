@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:lb_flutter/tv_list.dart';
@@ -74,7 +75,8 @@ class Lblelinkplugin {
           _playStatusStreamController.add(PlayStatus.playing);
           break;
         case 4:
-          Future.delayed(Duration(milliseconds: 500), () {//有什么办法处理？
+          Future.delayed(Duration(milliseconds: 500), () {
+            //有什么办法处理？
             _lbCallBack?.pauseCallBack();
             _progressStreamController
                 .add(ProgressInfo.fromMap({'isPlaying': false}));
@@ -129,6 +131,13 @@ class Lblelinkplugin {
         "initLBSdk", {"appid": appid, "secretKey": secretKey}).then((data) {
       return data;
     });
+  }
+
+  ///log开关
+  static void enableLog(bool enable) {
+    if (Platform.isIOS) {
+      _channel.invokeMethod('enableLog', {"data": enable});
+    }
   }
 
   ///获取设备列表
