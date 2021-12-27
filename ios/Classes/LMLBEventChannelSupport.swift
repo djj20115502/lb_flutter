@@ -21,6 +21,7 @@ enum ResultType: Int {
     case info = 8;
     case error = 9; //error
     case position = 10;
+    case connected = 11;
 }
 
 

@@ -164,7 +164,7 @@ extension LMLBSDKManager: LBLelinkConnectionDelegate{
         //连接成功的话保存该设备
         self.linkBrowser.save([service])
         
-        LMLBEventChannelSupport.sharedInstance.sendCommonDataToFlutter(type: .connect, data: "连接\(String(describing: service.lelinkServiceName))成功")
+        LMLBEventChannelSupport.sharedInstance.sendCommonDataToFlutter(type: .connected, data: "连接\(String(describing: service.lelinkServiceName))成功")
         
     }
     
