@@ -49,7 +49,8 @@ public class SwiftLblelinkpluginPlugin: NSObject, FlutterPlugin {
             break
         case "seekTo":
             let seekTime = (dict?["seekTime"] as? Int) ?? 0
-            LMLBSDKManager.shareInstance.seekTo(seekTime: seekTime)
+            LBPlayerManager.shareInstance.seekTo(seekTime: seekTime)
+            break;
         case "getLastConnectService":
             LMLBSDKManager.shareInstance.getLastConnectService(result: result)
             break
