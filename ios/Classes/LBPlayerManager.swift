@@ -25,6 +25,10 @@ class LBPlayerManager: NSObject {
        
    }
     
+    func seekTo(seekTime: int) {
+        player.seek(to: seekTime)
+    }
+    
     //暂停
     func pause(){
         self.player.pause()

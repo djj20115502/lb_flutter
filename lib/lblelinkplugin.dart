@@ -220,6 +220,13 @@ class Lblelinkplugin {
     });
   }
 
+  ///调节进度的位置，单位秒
+  static seekTo(int seekTime) {
+     _channel.invokeMethod("seekTo", {
+      "seekTime": seekTime,
+    });
+  }
+
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
     return version;
