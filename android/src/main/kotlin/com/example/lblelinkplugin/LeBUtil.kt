@@ -263,4 +263,8 @@ class LeBUtil private constructor() {
         result.success(mapOf("tvName" to lastLinkName, "tvUID" to lastLinkUid, "ipAddress" to lastLinkIp))
     }
 
+    fun seekTo(position: Int) {
+        sdk.seekTo(position)
+    }
+
 }

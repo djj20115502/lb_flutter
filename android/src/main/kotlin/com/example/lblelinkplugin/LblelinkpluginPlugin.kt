@@ -88,6 +88,9 @@ public class LblelinkpluginPlugin : FlutterPlugin, ActivityAware, MethodCallHand
             "getLastConnectService" -> {
                 LeBUtil.instance.getLastIp(result)
             }
+            "seekTo" -> {
+                LeBUtil.instance.seekTo(call.argument<Int>("seekTime")?:0)
+            }
         }
     }
 
