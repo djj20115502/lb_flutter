@@ -9,7 +9,7 @@ import kotlin.reflect.KProperty
 
 class SharedPreference<T>(val name: String, val default: T) {
 
-    val prefs: SharedPreferences by lazy { LblelinkpluginPlugin.ctx!!.getSharedPreferences(name, Context.MODE_PRIVATE) }
+    val prefs: SharedPreferences by lazy { LblelinkpluginPlugin.activity!!.getSharedPreferences(name, Context.MODE_PRIVATE) }
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
         return getSharedPreferences(name, default)
