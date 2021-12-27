@@ -25,7 +25,7 @@ class LBPlayerManager: NSObject {
        
    }
     
-    func seekTo(seekTime: int) {
+    func seekTo(seekTime: Int) {
         player.seek(to: seekTime)
     }
     
