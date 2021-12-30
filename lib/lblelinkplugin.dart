@@ -41,8 +41,19 @@ class Lblelinkplugin {
 
   static set lbCallBack(LbCallBack value) {
     _lbCallBack = value;
-  } //eventChannel监听分发中心
+  } 
 
+  static ProgressInfo? progressInfo;
+
+  static ProgressInfo _getProgressInfo(bool isPlaying) {
+    progressInfo?.isPlaying = isPlaying;
+    if (progressInfo != null) {
+      return progressInfo!;
+    }
+    return ProgressInfo.fromMap({'isPlaying': isPlaying});
+  }
+
+  ///eventChannel监听分发中心
   static eventChannelDistribution() {
     _eventChannel.receiveBroadcastStream().listen((data) {
       print(data);
@@ -65,13 +76,13 @@ class Lblelinkplugin {
         case 2:
           _lbCallBack?.loadingCallBack();
           _progressStreamController
-              .add(ProgressInfo.fromMap({'isPlaying': false}));
+              .add(_getProgressInfo(false));
           _playStatusStreamController.add(PlayStatus.loading);
           break;
         case 3:
           _lbCallBack?.startCallBack();
           _progressStreamController
-              .add(ProgressInfo.fromMap({'isPlaying': true}));
+              .add(_getProgressInfo(true));
           _playStatusStreamController.add(PlayStatus.playing);
           break;
         case 4:
@@ -79,26 +90,26 @@ class Lblelinkplugin {
             //有什么办法处理？
             _lbCallBack?.pauseCallBack();
             _progressStreamController
-                .add(ProgressInfo.fromMap({'isPlaying': false}));
+                .add(_getProgressInfo(false));
             _playStatusStreamController.add(PlayStatus.pause);
           });
           break;
         case 5:
           _lbCallBack?.completeCallBack();
           _progressStreamController
-              .add(ProgressInfo.fromMap({'isPlaying': false}));
+              .add(_getProgressInfo(false));
           _playStatusStreamController.add(PlayStatus.completed);
           break;
         case 6:
           _lbCallBack?.stopCallBack();
           _progressStreamController
-              .add(ProgressInfo.fromMap({'isPlaying': false}));
+              .add(_getProgressInfo(false));
           _playStatusStreamController.add(PlayStatus.stoped);
           break;
         case 9:
           _lbCallBack?.errorCallBack(data["data"]);
           _progressStreamController
-              .add(ProgressInfo.fromMap({'isPlaying': false}));
+              .add(_getProgressInfo(false));
           _playStatusStreamController.add(PlayStatus.error);
           break;
         case 10:
@@ -109,6 +120,7 @@ class Lblelinkplugin {
               'duration': info['duration'],
               'isPlaying': true
             });
+            Lblelinkplugin.progressInfo = progressInfo;
             //通知流变更
             _progressStreamController.add(progressInfo);
             //通知回调变更
