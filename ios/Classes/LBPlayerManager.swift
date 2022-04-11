@@ -13,17 +13,21 @@ class LBPlayerManager: NSObject {
     static let shareInstance = LBPlayerManager()
     
     //开始播放
-    func beginPlay(connection: LBLelinkConnection,playUrl: String){
+    func beginPlay(connection: LBLelinkConnection, playUrl: String, startPosition: Int = 0, mediaType: Int = 0){
        
        self.player.lelinkConnection = connection;
        
        let playItem = LBLelinkPlayerItem()
-       playItem.mediaType = .videoOnline;
+        playItem.mediaType = mediaType == 102 ? .videoOnline : .audioOnline;
        playItem.mediaURLString = playUrl
-       playItem.startPosition = 0;
+       playItem.startPosition = startPosition;
        self.player.play(with: playItem)
        
    }
+    
+    func seekTo(seekTime: Int) {
+        player.seek(to: seekTime)
+    }
     
     //暂停
     func pause(){
@@ -78,22 +82,22 @@ extension LBPlayerManager: LBLelinkPlayerDelegate{
         
         switch playStatus {
         case .loading:
-            LMLBEventChannelSupport.sharedInstance.sendCommonDesToFlutter(type: .load, des: "视频正在加载...")
+            LMLBEventChannelSupport.sharedInstance.sendCommonDataToFlutter(type: .load, data: "视频正在加载...")
             break
         case .playing:
-        LMLBEventChannelSupport.sharedInstance.sendCommonDesToFlutter(type: .start, des: "开始播放")
+        LMLBEventChannelSupport.sharedInstance.sendCommonDataToFlutter(type: .start, data: "开始播放")
         break
         case .pause:
-        LMLBEventChannelSupport.sharedInstance.sendCommonDesToFlutter(type: .pause, des: "视频暂停")
+        LMLBEventChannelSupport.sharedInstance.sendCommonDataToFlutter(type: .pause, data: "视频暂停")
         break
         case .stopped:
-        LMLBEventChannelSupport.sharedInstance.sendCommonDesToFlutter(type: .stop, des: "退出播放")
+        LMLBEventChannelSupport.sharedInstance.sendCommonDataToFlutter(type: .stop, data: "退出播放")
         break
         case .commpleted:
-        LMLBEventChannelSupport.sharedInstance.sendCommonDesToFlutter(type: .complete, des: "播放完成")
+        LMLBEventChannelSupport.sharedInstance.sendCommonDataToFlutter(type: .complete, data: "播放完成")
         break
         case .error:
-        LMLBEventChannelSupport.sharedInstance.sendCommonDesToFlutter(type: .error, des: "播放出错")
+        LMLBEventChannelSupport.sharedInstance.sendCommonDataToFlutter(type: .error, data: "播放出错")
         break
         default:
             break
@@ -110,9 +114,11 @@ extension LBPlayerManager: LBLelinkPlayerDelegate{
     
     //
     func lelinkPlayer(_ player: LBLelinkPlayer!, progressInfo: LBLelinkProgressInfo!) {
-        
         print("当前进度:\(progressInfo.currentTime)");
-        
+        LMLBEventChannelSupport.sharedInstance.sendCommonDataToFlutter(type: .position, data: [
+            "current": progressInfo.currentTime,
+            "duration": progressInfo.duration
+        ])
     }
     
 }

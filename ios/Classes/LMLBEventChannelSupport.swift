@@ -21,6 +21,7 @@ enum ResultType: Int {
     case info = 8;
     case error = 9; //error
     case position = 10;
+    case connected = 11;
 }
 
 
@@ -82,10 +83,10 @@ class LMLBEventChannelSupport: NSObject,FlutterPlugin, FlutterStreamHandler{
     }
     
     //一般输出（例如连接成功等）
-    func sendCommonDesToFlutter(type: ResultType,des: String){
+    func sendCommonDataToFlutter(type: ResultType, data: Any){
         if let sink = self.eventSink{
             
-            sink(self.createResult(type: type, data: des))
+            sink(self.createResult(type: type, data: data))
         
         }
     }

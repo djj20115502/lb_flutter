@@ -9,7 +9,7 @@ import kotlin.reflect.KProperty
 
 class SharedPreference<T>(val name: String, val default: T) {
 
-    val prefs: SharedPreferences by lazy { LblelinkpluginPlugin.ctx!!.getSharedPreferences(name, Context.MODE_PRIVATE) }
+    val prefs: SharedPreferences by lazy { LblelinkpluginPlugin.activity!!.getSharedPreferences(name, Context.MODE_PRIVATE) }
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
         return getSharedPreferences(name, default)
@@ -35,7 +35,7 @@ class SharedPreference<T>(val name: String, val default: T) {
     private fun getSharedPreferences(name: String, default: T): T = with(prefs) {
         val res: Any = when (default) {
             is Long -> getLong(name, default)
-            is String -> getString(name, default)
+            is String -> getString(name, default)?:""
             is Int -> getInt(name, default)
             is Boolean -> getBoolean(name, default)
             is Float -> getFloat(name, default)
